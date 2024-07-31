@@ -63,7 +63,7 @@ public class UserController {
             @PathVariable("userId") Integer uId)
     {
         UserDto getoneuser = this.userService.getUserById(uId);
-        //return ResponseEntity.ok(getoneuser); //user line no 48 or 49 anyone
+        //return ResponseEntity.ok(getoneuser);
         return new ResponseEntity<>(getoneuser,HttpStatus.OK);
     }
 }
