@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserById(Integer userId) {
         //find user if user find it will return otherwise it will throw exception ResourceNotFoundException
         User user = userRepositoy.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("user", "id", userId));;
+                .orElseThrow(() -> new ResourceNotFoundException("user", "id", userId));
         UserDto userDto3 = this.userToDto(user);   // create UserDto obj add into user data
         return userDto3; // return UserDtos
     }
@@ -69,7 +69,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Integer userId) {
-        User user = this.userRepositoy.findById(userId).get();
+        User user = this.userRepositoy.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("user", "id", userId));;
         // this.userRepositoy.deleteById(userId);
         this.userRepositoy.delete(user); // delete/deleteById we can use anyone here
     }
