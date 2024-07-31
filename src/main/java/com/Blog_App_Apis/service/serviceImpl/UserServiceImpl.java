@@ -2,6 +2,7 @@ package com.Blog_App_Apis.service.serviceImpl;
 
 import com.Blog_App_Apis.Payload.UserDto;
 import com.Blog_App_Apis.entity.User;
+import com.Blog_App_Apis.exception.ResourceNotFoundException;
 import com.Blog_App_Apis.repository.UserRepository;
 import com.Blog_App_Apis.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -33,7 +34,9 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(UserDto userDto, Integer userId) {
         //finding the user with userid
         Optional<User> byId = this.userRepositoy.findById(userId);
-        User user = byId.get(); // if userid will get then return to the user
+         // if userid will get then return to the user
+        //User user = byId.get();
+        User user = byId.orElseThrow(() -> new ResourceNotFoundException("user", "id", userId));
         // when user get then we set the value mean update the user
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
@@ -49,7 +52,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserById(Integer userId) {
-        User user = userRepositoy.findById(userId).get();
+        //find user if user find it will return otherwise it will throw exception ResourceNotFoundException
+        User user = userRepositoy.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("user", "id", userId));;
         UserDto userDto3 = this.userToDto(user);   // create UserDto obj add into user data
         return userDto3; // return UserDtos
     }
