@@ -4,6 +4,7 @@ import com.Blog_App_Apis.Payload.UserDto;
 import com.Blog_App_Apis.entity.User;
 import com.Blog_App_Apis.repository.UserRepository;
 import com.Blog_App_Apis.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepositoy;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public UserDto createUser(UserDto userdto) {
@@ -53,6 +57,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> getAllUsers() {
         List<User> users = this.userRepositoy.findAll();
+        //here one by one user will get through stream and store in list
         List<UserDto> userDtos4 = users.stream().map(user -> userToDto(user)).collect(Collectors.toList());
         return userDtos4;
     }
@@ -64,23 +69,32 @@ public class UserServiceImpl implements UserService {
         this.userRepositoy.delete(user); // delete/deleteById we can use anyone here
     }
 
+//    private UserDto userToDto(User user){
+//        UserDto userdto = new UserDto();
+//        userdto.setId(user.getId());
+//        userdto.setName(user.getName());
+//        userdto.setEmail(user.getEmail());
+//        userdto.setPassword(user.getPassword());
+//        userdto.setAbout(user.getAbout());
+//        return userdto;
+//    }
+
     private UserDto userToDto(User user){
-        UserDto userdto = new UserDto();
-        userdto.setId(user.getId());
-        userdto.setName(user.getName());
-        userdto.setEmail(user.getEmail());
-        userdto.setPassword(user.getPassword());
-        userdto.setAbout(user.getAbout());
+        UserDto userdto = modelMapper.map(user,UserDto.class); //used modelmapper
         return userdto;
     }
+//    private User dtoToUser(UserDto userDto){
+//        User user = new User();
+//        user.setId(userDto.getId());
+//        user.setName(userDto.getName());
+//        user.setEmail(userDto.getEmail());
+//        user.setPassword(userDto.getPassword());
+//        user.setAbout(userDto.getAbout());
+//        return user;
+//    }
 
     private User dtoToUser(UserDto userDto){
-        User user = new User();
-        user.setId(userDto.getId());
-        user.setName(userDto.getName());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
-        user.setAbout(userDto.getAbout());
+        User user = modelMapper.map(userDto,User.class); // used modelmapper also we can use modelstruct here
         return user;
     }
 }
