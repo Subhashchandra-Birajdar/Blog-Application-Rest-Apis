@@ -1,6 +1,7 @@
 package com.Blog_App_Apis.service;
 
 import com.Blog_App_Apis.Payload.UserDto;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -14,4 +15,9 @@ public interface UserService {
     List<UserDto> getAllUsers();
 
     void deleteUser(Integer userId);
+
+    List<UserDto> getAllUsers(Pageable pageable);
+
+    List<UserDto> getAllUsers1(int page, int size, String sortField, String sortDirection);
+
 }

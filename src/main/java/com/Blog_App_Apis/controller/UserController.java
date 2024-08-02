@@ -5,6 +5,7 @@ import com.Blog_App_Apis.exception.ApiResponse;
 import com.Blog_App_Apis.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/addUser") // http://localhost;8080/api/users/
+    @PostMapping("/addUser") // http://localhost:8080/api/users/addUser
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto){
         UserDto CreateuserDto1 = this.userService.createUser(userDto);
         return new ResponseEntity<>(CreateuserDto1, HttpStatus.CREATED);
@@ -30,12 +31,12 @@ public class UserController {
     {
     "name" : "sachin patil",
     "email" : "sachinpatil@gmail.com",
-    "password" : "sachin@patil",
+    "password" : "sachin",
     "about" : "sachin is developer"
     }
      */
 
-    @PutMapping("/{userId}")  //http://localhost;8080/api/users/1
+    @PutMapping("/{userId}")  //http://localhost:8080/api/users/1
     public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto,
                                               @PathVariable("userId") Integer Id)
     {
@@ -44,7 +45,7 @@ public class UserController {
         return  new ResponseEntity<>(updateduserDto1,HttpStatus.OK);
     }
 
-    @DeleteMapping("/{userId}") //http://localhost;8080/api/users/1
+    @DeleteMapping("/{userId}") //http://localhost:8080/api/users/1
     public ResponseEntity<ApiResponse> deleteuser(
             @PathVariable ("userId")Integer Id)
     {
@@ -59,7 +60,7 @@ public class UserController {
         return new ResponseEntity<>(allUsers,HttpStatus.OK);
     }
 
-    @GetMapping("/{userId}") //http://localhost;8080/api/users/1
+    @GetMapping("/{userId}") //http://localhost:8080/api/users/1
     public ResponseEntity<UserDto> getSingleuser(
             @PathVariable("userId") Integer uId)
     {
@@ -67,4 +68,23 @@ public class UserController {
         //return ResponseEntity.ok(getoneuser);
         return new ResponseEntity<>(getoneuser,HttpStatus.OK);
     }
+
+    @GetMapping("/pagination/users") // http://localhost:8080/api/users/pagination/users?page=0&size=2o
+    public List<UserDto> getUsers(Pageable pageable) {
+        List<UserDto> allUsers = userService.getAllUsers(pageable);
+        return allUsers;
+    }
+
+    @GetMapping("/pagination")
+    // http://localhost:8080/api/users/pagination?page=0&size=3&sortField=name&sortDirection=desc
+    public List<UserDto> getUsersDir(
+            @RequestParam(value="page",defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortField,
+            @RequestParam(defaultValue = "asc") String sortDirection)
+    {
+        List<UserDto> allUsers = userService.getAllUsers1(page,size,sortField,sortDirection);
+        return allUsers;
+    }
+
 }

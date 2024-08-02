@@ -7,6 +7,10 @@ import com.Blog_App_Apis.repository.UserRepository;
 import com.Blog_App_Apis.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -103,5 +107,25 @@ public class UserServiceImpl implements UserService {
         User user = modelMapper.map(userDto,User.class); // used modelmapper also we can use modelstruct here
         return user;
     }
+
+    @Override
+    public List<UserDto> getAllUsers(Pageable pageable) {
+        //Pageable p = PageRequest.of(0, 10); // here get the pageable class here we get pagesize,pagenumber
+        Page<User> all = userRepositoy.findAll(pageable);// pageable return the page
+        List<User> content = all.getContent();
+        List<UserDto> userDtos = content.stream().map((a) -> modelMapper.map(a, UserDto.class)).collect(Collectors.toList());
+        return userDtos;
+    }
+
+    @Override
+    public List<UserDto> getAllUsers1(int page, int size, String sortField, String sortDirection) {
+        Sort sort = Sort.by(sortDirection.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortField);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<User> all = userRepositoy.findAll(pageable);
+        List<User> userList = all.getContent();
+        List<UserDto> userDtos = userList.stream().map((a) -> modelMapper.map(a, UserDto.class)).collect(Collectors.toList());
+        return userDtos;
+    }
+
 }
 
