@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="posts")
@@ -37,4 +39,8 @@ public class Post {
     //step - 4
     @ManyToOne
     private User user; // many post with one user
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "post")
+    private List<Comments> comments =new ArrayList<>();
+
 }
