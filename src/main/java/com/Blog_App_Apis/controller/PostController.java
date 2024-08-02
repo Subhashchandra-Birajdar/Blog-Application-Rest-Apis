@@ -4,11 +4,16 @@ import com.Blog_App_Apis.Payload.PostDto;
 import com.Blog_App_Apis.Payload.PostResponse;
 import com.Blog_App_Apis.config.AppConstants;
 import com.Blog_App_Apis.exception.ApiResponse;
+import com.Blog_App_Apis.service.FileService;
 import com.Blog_App_Apis.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -18,6 +23,8 @@ public class PostController {
 
     @Autowired
     private PostService postservice;
+    @Autowired
+    private FileService fileService;
 
     @PostMapping("/user/{userId}/category/{categoryId}/posts")
     // http://localhost:8080/api/posts/user/1/category/1/posts
@@ -123,4 +130,44 @@ public class PostController {
         return new ResponseEntity<PostResponse>(postResponse, HttpStatus.OK);
     }
 
+
+    //    @Value("${project.image}")
+//    private String path;       // this annotation come from the lombok validation
+
+    @Value("${project.image}")
+    private String path;        // this comes from bean spring
+
+    //upload the image to the post  , http://localhost:8080/api/posts/post/image/upload/1 add the file also,
+    // in postman select form-data in write image and select the path then hit send it will update the post
+    @PostMapping("/post/image/upload/{postId}")
+    public ResponseEntity<PostDto> uploadPostImage(
+            @PathVariable("postId") Integer postId,
+            @RequestParam("image") MultipartFile image) throws IOException
+    {
+        PostDto postDto = this.postservice.getpostById(postId);
+        String fileName = this.fileService.uploadImage(path,image);
+        postDto.setImageName(fileName);
+        PostDto updatePost = this.postservice.updatePost(postDto,postId);
+        return new ResponseEntity<>(updatePost, HttpStatus.OK);
+    }
+
+    //method to serve files
+//    @GetMapping(value="/image/downloadpost/{imageName}",produces = MediaType.IMAGE_JPEG_VALUE)
+//    // http://localhost:8080/api/posts/image/downloadpost/1
+//   // @GetMapping(value = "/image/downloadpost/{imageName:.+}", produces = MediaType.IMAGE_JPEG_VALUE)
+//    public void downloadImage(
+//            @PathVariable("imageName")String imageName,
+//            HttpServletResponse response)throws IOException
+//    {
+//        InputStream resource = this.fileservice.getResource(path,imageName);
+//        //response.getContentType(MediaType.IMAGE_JPEG_VALUE);
+//        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+//        StreamUtils.copy(resource,response.getOutputStream());
+//    }
+
+//first get the image though id /// http://localhost:8080/api/posts/1
+// http://localhost:8080/api/posts/image/downloadpost/imagenameaddhere .. get in crome
+
 }
+
+
