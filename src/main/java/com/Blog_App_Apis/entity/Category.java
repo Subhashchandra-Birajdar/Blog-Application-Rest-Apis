@@ -24,4 +24,8 @@ public class Category {
     @Column(name="description")
     private String categoryDescription;
 
+    //change the category table step - 1
+    @OneToMany(mappedBy = "category",cascade=CascadeType.ALL,fetch=FetchType.LAZY)
+    // if parent is deleted then child also delete
+    private List<Post> posts= new ArrayList<>();
 }

@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
@@ -27,4 +30,8 @@ public class User {
 
         @Column(name = "user_about")
         private String about;
+
+        // *2
+        @OneToMany(mappedBy = "user",cascade=CascadeType.ALL,fetch=FetchType.LAZY) // if parent is deleted then child also delete
+        private List<Post> posts= new ArrayList<>();
 }
