@@ -13,6 +13,7 @@ public class Comments {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name="name",nullable = false)
     private String name;
 
@@ -21,6 +22,7 @@ public class Comments {
 
     @Column(name="body",nullable = false)
     private String body;
+
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name="post_id",nullable = false)
     private Post post;

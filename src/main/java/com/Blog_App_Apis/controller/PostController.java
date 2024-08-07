@@ -6,14 +6,18 @@ import com.Blog_App_Apis.config.AppConstants;
 import com.Blog_App_Apis.exception.ApiResponse;
 import com.Blog_App_Apis.service.FileService;
 import com.Blog_App_Apis.service.PostService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -23,6 +27,7 @@ public class PostController {
 
     @Autowired
     private PostService postservice;
+
     @Autowired
     private FileService fileService;
 
@@ -152,21 +157,30 @@ public class PostController {
     }
 
     //method to serve files
-//    @GetMapping(value="/image/downloadpost/{imageName}",produces = MediaType.IMAGE_JPEG_VALUE)
-//    // http://localhost:8080/api/posts/image/downloadpost/1
-//   // @GetMapping(value = "/image/downloadpost/{imageName:.+}", produces = MediaType.IMAGE_JPEG_VALUE)
-//    public void downloadImage(
-//            @PathVariable("imageName")String imageName,
-//            HttpServletResponse response)throws IOException
-//    {
-//        InputStream resource = this.fileservice.getResource(path,imageName);
-//        //response.getContentType(MediaType.IMAGE_JPEG_VALUE);
-//        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
-//        StreamUtils.copy(resource,response.getOutputStream());
-//    }
+    @GetMapping(value="/image/downloadpost/{imageName}",produces = MediaType.IMAGE_JPEG_VALUE)
+    // http://localhost:8080/api/posts/image/downloadpost/1
+   // @GetMapping(value = "/image/downloadpost/{imageName:.+}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public void downloadImage(
+            @PathVariable("imageName")String imageName,
+            HttpServletResponse response)throws IOException
+    {
+        InputStream resource = this.fileService.getResource(path,imageName);
+        //response.getContentType(MediaType.IMAGE_JPEG_VALUE);
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        StreamUtils.copy(resource,response.getOutputStream());
+    }
 
 //first get the image though id /// http://localhost:8080/api/posts/1
 // http://localhost:8080/api/posts/image/downloadpost/imagenameaddhere .. get in crome
+
+
+    @GetMapping("/{postId}")    //
+    public ResponseEntity<PostDto> getPost(
+            @PathVariable("postId") Integer postId)
+    {
+        PostDto postDto = this.postservice.getpostById(postId);
+        return new ResponseEntity<>(postDto, HttpStatus.OK);
+    }
 
 }
 

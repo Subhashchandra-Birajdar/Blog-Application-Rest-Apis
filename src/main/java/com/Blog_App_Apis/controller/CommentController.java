@@ -1,6 +1,7 @@
 package com.Blog_App_Apis.controller;
 
 import com.Blog_App_Apis.Payload.CommentDto;
+import com.Blog_App_Apis.exception.ApiResponse;
 import com.Blog_App_Apis.service.CommentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +12,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/")
 public class CommentController {
-    private CommentService commentService;
+    private final CommentService commentService;
+
     public CommentController(CommentService commentService) {
         this.commentService = commentService;
     }
+
+
     //http://localhost:8080/api/posts/1/comments
     @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<CommentDto> createComment(
@@ -25,13 +29,6 @@ public class CommentController {
 //return new ResponseEntity<>(commentService.createComment(postId,commentDto), HttpStatus.CREATED);
     }
 
-    //http://localhost:8080/api/posts/1/comments
-    @GetMapping("/posts/{postId}/comments")
-    public List<CommentDto> getCommentsByPostId(@PathVariable(value = "postId")
-                                                Integer postId){
-        List<CommentDto> cmtdtos = commentService.findCommentsByPostId(postId);
-        return cmtdtos;
-    }
 
     //update comment by commentid the comment (Means A single comment not all)
 //http://localhost:8080/api/posts/1/comments/1
@@ -44,4 +41,12 @@ public class CommentController {
         CommentDto updatedComment = commentService.updateComment(postId, Id, commentDto);
         return new ResponseEntity<>(updatedComment,HttpStatus.CREATED);
     }
-}
+
+    @DeleteMapping("/commentdelete/{commentId}") // http://localhost:8080/api/commentdelete/1
+    public ResponseEntity<ApiResponse> deleteCommentById(
+            @PathVariable("commentId") Long cid) {
+        commentService.deleteComment(cid);
+        return new ResponseEntity<>(
+                new ApiResponse("Comment is deleted !!",true),HttpStatus.OK);
+        }
+    }

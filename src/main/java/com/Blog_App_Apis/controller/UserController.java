@@ -25,17 +25,6 @@ public class UserController {
         return new ResponseEntity<>(CreateuserDto1, HttpStatus.CREATED);
     }
 
-    /*
-    Json:
-    Post : http://localhost;8080/api/users/addUser
-    {
-    "name" : "sachin patil",
-    "email" : "sachinpatil@gmail.com",
-    "password" : "sachin",
-    "about" : "sachin is developer"
-    }
-     */
-
     @PutMapping("/{userId}")  //http://localhost:8080/api/users/1
     public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto,
                                               @PathVariable("userId") Integer Id)
@@ -69,7 +58,7 @@ public class UserController {
         return new ResponseEntity<>(getoneuser,HttpStatus.OK);
     }
 
-    @GetMapping("/pagination/users") // http://localhost:8080/api/users/pagination/users?page=0&size=2o
+    @GetMapping("/pagination/users") // http://localhost:8080/api/users/pagination/users?page=0&size=2
     public List<UserDto> getUsers(Pageable pageable) {
         List<UserDto> allUsers = userService.getAllUsers(pageable);
         return allUsers;

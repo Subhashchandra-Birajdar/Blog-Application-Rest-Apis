@@ -92,7 +92,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto getpostById(Integer postId) {
-        Post posts = this.postRepository.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post","post id",postId));
+        Post posts = this.postRepository.findById(postId).
+                orElseThrow(()-> new ResourceNotFoundException("Post","post id",postId));
         PostDto postDto = modelMapper.map(posts, PostDto.class);
         return postDto;
     }
@@ -208,9 +209,10 @@ public class PostServiceImpl implements PostService {
         return postresponse; // return the postDtos at client
     }
 
+
     @Override
     public List<PostDto> searchPosts(String keyword) {
-        List<Post> posts = this.postRepository.searchByPost("%"+keyword+"%");
+        List<Post> posts = this.postRepository.searchByTitle("%"+keyword+"%");
         List<PostDto> postDtoList = posts.stream().map((post) -> this.modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
         return postDtoList;
     }

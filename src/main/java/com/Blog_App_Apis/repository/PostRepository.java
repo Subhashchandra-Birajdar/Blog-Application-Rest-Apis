@@ -13,10 +13,8 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     List<Post> findByUser(User user);
     List<Post> findByCategory(Category category);
     @Query("select p from Post p where p.title like:key")
-    List<Post> searchByTitle(@Param("key")String title);  //--- change this in Postimpl (7h23min)
-
-    List<Post> searchByPost(String s);
-
-    //List<PostDto> findByTitleContaining(String title);
+    List<Post> searchByTitle(@Param("key")String title);
+    //or
+    //List<Post> searchByTitleContaining(String title);
 }
 

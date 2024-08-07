@@ -31,5 +31,7 @@ public interface PostService {
     PostResponse getAllPostWithSortingByAndDir(Integer pageNumber, Integer pageSize, String sortBy, String sortDir);
 
     PostResponse getAllPostswithSortingAndOrderwithAppConstant(Integer pageNumber, Integer pageSize, String sortBy, String sortDir);
+
+
 }
 

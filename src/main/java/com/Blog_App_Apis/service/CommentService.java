@@ -9,7 +9,7 @@ public interface CommentService {
     CommentDto createComment(Integer postId, CommentDto commentDto);
 //postid (if post is exist then for that , we can comment on that post)
 
-    List<CommentDto> findCommentsByPostId(Integer postId);
+    void deleteComment(long commentId);
 
     CommentDto updateComment(Integer postId, Long id, CommentDto commentDto);
 

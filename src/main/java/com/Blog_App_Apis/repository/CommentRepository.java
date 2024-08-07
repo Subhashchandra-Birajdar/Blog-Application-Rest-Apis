@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comments, Long> {
 
-    List<Comments> findByPostId(long postId);
-    //List<CommentDto> findbyPostIdAndEmail(long Id,String email);
+
 
 }
